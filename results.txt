@@ -1,0 +1,133 @@
+MPI_Gather on 2D Torus - Simulation Results
+
+
+
+Run 1: Naive Gather
+
+Topology: 4x4 2D Torus
+Number of nodes: 16
+Root rank: 0
+Algorithm: naive
+Payload size: 1024 bytes
+Link delay: 1 ms
+Link datarate: 10 Mbps
+
+Results:
+Gather completion time: 1.0197344 s
+Total hop count: 32
+Average latency: 0.00402709 s
+Root received packets: 15
+
+Notes:
+This is the baseline naive approach. Every non-root node sends its data directly toward the root using shortest-path routing on the 2D torus topology.
+
+
+
+Run 2: Optimized / Topology-aware Gather
+
+Topology: 4x4 2D Torus
+Number of nodes: 16
+Root rank: 0
+Algorithm: optimized
+Payload size: 1024 bytes
+Link delay: 1 ms
+Link datarate: 10 Mbps
+
+Results:
+Gather completion time: 1.025192 s
+Total hop transmissions: 20
+Average packet latency at root: 0.004564 s
+Root received packets: 6
+Root received payloads: 15
+
+Comparison with naive:
+The optimized algorithm reduced total hop transmissions from 32 to 20.
+The number of packets received by the root decreased from 15 to 6.
+However, the completion time slightly increased from 1.0197344 s to 1.025192 s because row leaders wait to collect row data before sending aggregated packets to the root.
+For this small 4x4 topology, the optimized method mainly improves network traffic and root load rather than completion time.
+
+
+Run 3: Naive Gather on 8x8 Torus
+
+Topology: 8x8 2D Torus
+Number of nodes: 64
+Root rank: 0
+Algorithm: naive
+Payload size: 1024 bytes
+Link delay: 1 ms
+Link datarate: 10 Mbps
+
+Results:
+Gather completion time: 1.0698528 s
+Total hop transmissions: 256
+Average packet latency at root: 0.00816543 s
+Root received packets: 63
+Root received payloads: 63
+
+
+
+Run 4: Optimized / Topology-aware Gather on 8x8 Torus
+
+Topology: 8x8 2D Torus
+Number of nodes: 64
+Root rank: 0
+Algorithm: optimized
+Payload size: 1024 bytes
+Link delay: 1 ms
+Link datarate: 10 Mbps
+
+Results:
+Gather completion time: 1.093152 s
+Total hop transmissions: 144
+Average packet latency at root: 0.0133291 s
+Root received packets: 14
+Root received payloads: 63
+
+Comparison with naive:
+The optimized algorithm reduced total hop transmissions from 256 to 144.
+The number of packets received by the root decreased from 63 to 14.
+The completion time increased slightly from 1.0698528 s to 1.093152 s because row leaders first collect data from their rows and then send aggregated packets to the root.
+For 8x8 topology, the optimized method clearly reduces network traffic and root load, but it has a small delay cost due to aggregation.
+
+
+Run 5: Naive Gather on 16x16 Torus
+
+Topology: 16x16 2D Torus
+Number of nodes: 256
+Root rank: 0
+Algorithm: naive
+Payload size: 1024 bytes
+Link delay: 1 ms
+Link datarate: 10 Mbps
+
+Results:
+Gather completion time: 1.2660112 s
+Total hop transmissions: 2048
+Average packet latency at root: 0.0162183 s
+Root received packets: 255
+Root received payloads: 255
+
+
+
+Run 6: Optimized / Topology-aware Gather on 16x16 Torus
+
+Topology: 16x16 2D Torus
+Number of nodes: 256
+Root rank: 0
+Algorithm: optimized
+Payload size: 1024 bytes
+Link delay: 1 ms
+Link datarate: 10 Mbps
+
+Results:
+Gather completion time: 1.3551616 s
+Total hop transmissions: 1088
+Average packet latency at root: 0.0444431 s
+Root received packets: 30
+Root received payloads: 255
+
+Comparison with naive:
+The optimized algorithm reduced total hop transmissions from 2048 to 1088.
+The number of packets received by the root decreased from 255 to 30.
+The completion time increased from 1.2660112 s to 1.3551616 s because the optimized algorithm waits for row-level aggregation before sending data to the root.
+For 16x16 topology, the optimized method significantly reduces network traffic and root load, but it introduces aggregation delay.
